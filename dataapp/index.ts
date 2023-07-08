@@ -10,217 +10,6 @@ import ip from 'ip'
 import crypto from 'crypto'
 import { spawn } from 'child_process'
 
-// import fetch from 'node-fetch';
-
-const stateMapping: Record<string, string> = {
-    "Alabama": "AL",
-    "Kentucky": "KY",
-    "Ohio": "OH",
-    "Alaska": "AK",
-    "Louisiana": "LA",
-    "Oklahoma": "OK",
-    "Arizona": "AZ",
-    "Maine": "ME",
-    "Oregon": "OR",
-    "Arkansas": "AR",
-    "Maryland": "MD",
-    "Pennsylvania": "PA",
-    "American Samoa": "AS",
-    "Massachusetts": "MA",
-    "Puerto Rico": "PR",
-    "California": "CA",
-    "Michigan": "MI",
-    "Rhode Island": "RI",
-    "Colorado": "CO",
-    "Minnesota": "MN",
-    "South Carolina": "SC",
-    "Connecticut": "CT",
-    "Mississippi": "MS",
-    "South Dakota": "SD",
-    "Delaware": "DE",
-    "Missouri": "MO",
-    "Tennessee": "TN",
-    "District of Columbia": "DC",
-    "Montana": "MT",
-    "Texas": "TX",
-    "Florida": "FL",
-    "Nebraska": "NE",
-    "Trust Territories": "TT",
-    "Georgia": "GA",
-    "Nevada": "NV",
-    "Utah": "UT",
-    "Guam": "GU",
-    "New Hampshire": "NH",
-    "Vermont": "VT",
-    "Hawaii": "HI",
-    "New Jersey": "NJ",
-    "Virginia": "VA",
-    "Idaho": "ID",
-    "New Mexico": "NM",
-    "Virgin Islands": "VI",
-    "Illinois": "IL",
-    "New York": "NY",
-    "Washington": "WA",
-    "Indiana": "IN",
-    "North Carolina": "NC",
-    "West Virginia": "WV",
-    "Iowa": "IA",
-    "North Dakota": "ND",
-    "Wisconsin": "WI",
-    "Kansas": "KS",
-    "Northern Mariana Islands": "MP",
-    "Wyoming": "WY"
-  }
-
-const streetSuffixMapping: Record<string, string> = {
-    "Alley": "aly",
-    "Alleyway": "alyw",
-    "Anex": "anx",
-    "Annex": "anx",
-    "Arcade": "arc",
-    "Avenue": "ave",
-    "Bayou": "byu",
-    "Beach": "bch",
-    "Bend": "bnd",
-    "Bluff": "blf",
-    "Bottom": "btm",
-    "Boulevard": "blvd",
-    "Branch": "br",
-    "Bridge": "brg",
-    "Brook": "brk",
-    "Bypass": "byp",
-    "Camp": "cp",
-    "Canyon": "cyn",
-    "Cape": "cpe",
-    "Causeway": "cswy",
-    "Center": "ctr",
-    "Circle": "cir",
-    "Cliff": "clf",
-    "Club": "clb",
-    "Common": "cmn",
-    "Corner": "cor",
-    "Course": "crse",
-    "Court": "ct",
-    "Courts": "cts",
-    "Cove": "cv",
-    "Creek": "crk",
-    "Crescent": "cres",
-    "Crest": "crst",
-    "Crossing": "xing",
-    "Crossroad": "xrd",
-    "Curve": "curv",
-    "Dale": "dl",
-    "Dam": "dm",
-    "Drive": "dr",
-    "Estate": "est",
-    "Expressway": "expy",
-    "Extension": "ext",
-    "Falls": "fls",
-    "Ferry": "fry",
-    "Field": "fld",
-    "Flat": "flt",
-    "Ford": "frd",
-    "Forest": "frst",
-    "Forge": "frg",
-    "Fork": "frk",
-    "Fort": "ft",
-    "Freeway": "fwy",
-    "Garden": "gdn",
-    "Gateway": "gtwy",
-    "Glen": "gln",
-    "Green": "grn",
-    "Grove": "grv",
-    "Harbor": "hbr",
-    "Haven": "hvn",
-    "Heights": "hts",
-    "Highway": "hwy",
-    "Hill": "hl",
-    "Hollow": "holw",
-    "Inlet": "inlt",
-    "Island": "is",
-    "Junction": "jct",
-    "Key": "ky",
-    "Knoll": "knl",
-    "Lake": "lk",
-    "Landing": "lndg",
-    "Lane": "ln",
-    "Light": "lgt",
-    "Loaf": "lf",
-    "Lock": "lck",
-    "Locks": "lcks",
-    "Lodge": "ldg",
-    "Loop": "loop",
-    "Mall": "mall",
-    "Manor": "mnr",
-    "Meadow": "mdw",
-    "Mews": "mews",
-    "Mill": "ml",
-    "Mission": "msn",
-    "Motorway": "mtwy",
-    "Mount": "mt",
-    "Mountain": "mtn",
-    "Neck": "nck",
-    "Orchard": "orch",
-    "Overpass": "opas",
-    "Park": "park",
-    "Parkway": "pkwy",
-    "Pass": "pass",
-    "Path": "path",
-    "Pike": "pike",
-    "Pine": "pne",
-    "Place": "pl",
-    "Plain": "pln",
-    "Plaza": "plz",
-    "Point": "pt",
-    "Port": "prt",
-    "Prairie": "pr",
-    "Radial": "radl",
-    "Ramp": "ramp",
-    "Ranch": "rnch",
-    "Rapid": "rpd",
-    "Rest": "rst",
-    "Ridge": "rdg",
-    "River": "riv",
-    "Road": "rd",
-    "Route": "rte",
-    "Row": "row",
-    "Rue": "rue",
-    "Run": "run",
-    "Shore": "shr",
-    "Skyway": "skwy",
-    "Spring": "spg",
-    "Springs": "spgs",
-    "Spur": "spur",
-    "Square": "sq",
-    "Station": "sta",
-    "Stravenue": "stra",
-    "Stream": "strm",
-    "Street": "st",
-    "Summit": "smt",
-    "Terrace": "ter",
-    "Throughway": "trwy",
-    "Trace": "trce",
-    "Track": "trak",
-    "Trafficway": "trfy",
-    "Trail": "trl",
-    "Trailer": "trlr",
-    "Tunnel": "tunl",
-    "Turnpike": "tpke",
-    "Underpass": "upas",
-    "Union": "un",
-    "Valley": "vly",
-    "Viaduct": "via",
-    "View": "vw",
-    "Village": "vlg",
-    "Ville": "vl",
-    "Vista": "vis",
-    "Walk": "walk",
-    "Way": "way",
-    "Well": "wl",
-    "Wells": "wls",
-    "Wye": "wye"
-  }
-
 const app = express()
 const port = 3000
 
@@ -240,14 +29,11 @@ app.use(bodyParser.json())
 
 const fs = require('fs')
 
-const donations = JSON.parse(fs.readFileSync('templates/pages/donations.json', 'utf-8'))
-
 
 // const mapTemplate = fs.readFileSync('templates/pages/map.html', 'utf-8')
 const indexTemplate = fs.readFileSync('templates/pages/home.mustache', 'utf-8')
 const recordByIdTemplate = fs.readFileSync('templates/pages/recordById.mustache', 'utf-8')
 const recordsListingTemplate = fs.readFileSync('templates/pages/recordsListing.mustache', 'utf-8')
-const donationsTemplate = fs.readFileSync('templates/pages/donations.html', 'utf-8')
 const exportsTemplate = fs.readFileSync('templates/pages/exports.html', 'utf-8')
 
 const visualizerTemplate = fs.readFileSync('templates/pages/visualizer.html', 'utf-8')
@@ -272,10 +58,11 @@ function getRandServer() {
     return servers[index];
 }
 
-function getRandWalletsServer() {
-    var index = Math.floor(Math.random() * servers.length);
-    return servers[index].replace('BigData', 'Wallets');
-}
+// **** Verificar função -> a principio faz parte da função de doação *****
+//function getRandWalletsServer() {
+//    var index = Math.floor(Math.random() * servers.length);
+//    return servers[index].replace('BigData', 'Wallets');
+//}
 
 
 
@@ -304,87 +91,87 @@ async function queryForDocsSpatial(latLong: string, distanceKm: number) {
     }
 }
 
+// **** Verificar função -> a principio faz parte da função de doação *****
+// async function getWalletBalance(wallet: string): Promise<number> {
+//     return axios.get(getRandWalletsServer(), {
+//         params: {
+//             q: `id:"${wallet}"`
+//         }
+//     })
+//         .then(({ data }) => {
+//             console.log(data.response.docs[0])
+//             if (data.response.docs[0]) {
+//                 return data.response.docs[0].credits
+//             } else {
+//                 return 0
+//             }
+//         }
+//         )
+//         .catch((err) => { console.log(err); return 0 })
+// }
 
-async function getWalletBalance(wallet: string): Promise<number> {
-    return axios.get(getRandWalletsServer(), {
-        params: {
-            q: `id:"${wallet}"`
-        }
-    })
-        .then(({ data }) => {
-            console.log(data.response.docs[0])
-            if (data.response.docs[0]) {
-                return data.response.docs[0].credits
-            } else {
-                return 0
-            }
-        }
-        )
-        .catch((err) => { console.log(err); return 0 })
-}
+// async function addWalletBalance(wallet: string, credits: number) {
+//     if (typeof credits !== 'number') {
+//         console.log(`Credits is not a number: ${credits}`)
+//         throw new Error('Credits is not a number')
+//     }
 
-async function addWalletBalance(wallet: string, credits: number) {
-    if (typeof credits !== 'number') {
-        console.log(`Credits is not a number: ${credits}`)
-        throw new Error('Credits is not a number')
-    }
+//     // Get the old balance
+//     const oldBalance = await getWalletBalance(wallet)
 
-    // Get the old balance
-    const oldBalance = await getWalletBalance(wallet)
+//     console.log('old balance: ' + oldBalance + ' credits: ' + credits + ' wallet: ' + wallet + ' new balance: ' + (oldBalance + credits))
+//     // Add the new balance
+//     credits += oldBalance
+//     // Update the wallet
+//     return axios.post(getRandWalletsServer().replace('select', 'update'), {
+//         "add": {
+//             "doc": {
+//                 // uuid v4
+//                 "id": wallet,
+//                 "credits": credits
+//             }
+//         }
+//     }, {
+//         params: {
+//             commit: true
+//         }
+//     }).then(() => {
+//         console.log(`Added ${credits} credits to wallet ${wallet}`)
+//         return true
+//     }) .catch ((err) => {
+//         console.log(err)
+//         return false
+//     })
+// }
 
-    console.log('old balance: ' + oldBalance + ' credits: ' + credits + ' wallet: ' + wallet + ' new balance: ' + (oldBalance + credits))
-    // Add the new balance
-    credits += oldBalance
-    // Update the wallet
-    return axios.post(getRandWalletsServer().replace('select', 'update'), {
-        "add": {
-            "doc": {
-                // uuid v4
-                "id": wallet,
-                "credits": credits
-            }
-        }
-    }, {
-        params: {
-            commit: true
-        }
-    }).then(() => {
-        console.log(`Added ${credits} credits to wallet ${wallet}`)
-        return true
-    }) .catch ((err) => {
-        console.log(err)
-        return false
-    })
-}
+// async function removeWalletBalance(wallet: string, credits: number) {
+//     if (typeof credits !== 'number') {
+//         console.log(`Credits is not a number: ${credits}`)
+//         throw new Error('Credits is not a number')
+//     }
 
-async function removeWalletBalance(wallet: string, credits: number) {
-    if (typeof credits !== 'number') {
-        console.log(`Credits is not a number: ${credits}`)
-        throw new Error('Credits is not a number')
-    }
-
-    // Get the old balance
-    const oldBalance = await getWalletBalance(wallet)
-    // Remove the new balance
-    const newBalance = oldBalance - credits
-    // Update the wallet
-    return axios.post(getRandWalletsServer().replace('select', 'update'), {
-        "add": {
-            "doc": {
-                // uuid v4
-                "id": wallet,
-                "credits": newBalance
-            }
-        }
-    }, {
-        params: {
-            commit: true
-        }
-    }).then(() => {
-        console.log(`Removed ${credits} credits to wallet ${wallet}`)
-        return true
-    })
-}
+//     // Get the old balance
+//     const oldBalance = await getWalletBalance(wallet)
+//     // Remove the new balance
+//     const newBalance = oldBalance - credits
+//     // Update the wallet
+//     return axios.post(getRandWalletsServer().replace('select', 'update'), {
+//         "add": {
+//             "doc": {
+//                 // uuid v4
+//                 "id": wallet,
+//                 "credits": newBalance
+//             }
+//         }
+//     }, {
+//         params: {
+//             commit: true
+//         }
+//     }).then(() => {
+//         console.log(`Removed ${credits} credits to wallet ${wallet}`)
+//         return true
+//     })
+// }
 
 async function queryForDocs(query: string, limit?: number, start?: number, sort?: string) {
     const records: SolrRecord[] = []
@@ -1050,34 +837,35 @@ app.get('/exports', async (req, res) => {
     return res.send(rendered)
 })
 
-app.get('/exports/:walletid', async (req, res) => {
-    try {
-        const walletid = req.params.walletid
-        // Ensure the wallet ID is valid
-        if (!uuidRegex.test(walletid)) {
-            return res.status(400).json({
-                error: 'Invalid wallet ID.'
-            })
-        }
-        const records = await queryForExportDocs(`wallet:"${walletid}"`)
+// **** Verificar função -> a principio faz parte da função de doação *****
+// app.get('/exports/:walletid', async (req, res) => {
+//     try {
+//         const walletid = req.params.walletid
+//         // Ensure the wallet ID is valid
+//         if (!uuidRegex.test(walletid)) {
+//             return res.status(400).json({
+//                 error: 'Invalid wallet ID.'
+//             })
+//         }
+//         const records = await queryForExportDocs(`wallet:"${walletid}"`)
 
-        return res.json(records.records.map((record: any) => {
-            return {
-                ...record,
-                jobid: record.id,
-                exportCount: record.count,
-            }
-        }))
-    } catch (e) {
-        return res.status(500).json([
-            {
-                id: 'internal error',
-                query: 'sorry bout that... try again?'
-            }
-        ])
-    }
+//         return res.json(records.records.map((record: any) => {
+//             return {
+//                 ...record,
+//                 jobid: record.id,
+//                 exportCount: record.count,
+//             }
+//         }))
+//     } catch (e) {
+//         return res.status(500).json([
+//             {
+//                 id: 'internal error',
+//                 query: 'sorry bout that... try again?'
+//             }
+//         ])
+//     }
     
-})
+// })
 
 app.get('/', async (req, res) => {
     const rendered = mustache.render(indexTemplate, { count: "14,491,682,918" })
@@ -1122,14 +910,15 @@ app.get('/canary', (req, res) => {
     res.sendFile(__dirname + '/static/canary.html')
 })
 
-app.get('/donations', (req, res) => {
-    // Render out the donations page tempate
-    const rendered = mustache.render(donationsTemplate, {
-        donations: donations.sort((a: any, b: any) => b.amount - a.amount)
-    })
+// **** Verificar função -> a principio faz parte da função de doação *****
+// app.get('/donations', (req, res) => {
+//     // Render out the donations page tempate
+//     const rendered = mustache.render(donationsTemplate, {
+//         donations: donations.sort((a: any, b: any) => b.amount - a.amount)
+//     })
 
-    return res.send(rendered)
-})
+//     return res.send(rendered)
+// })
 
 app.post('/export', async (req, res) => {
     try {
